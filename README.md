@@ -76,6 +76,6 @@ Also we need to change `logger`-section:
 
 ### Using ADC and UART
 
-For using A/D converter and UART, we need to do some manual modifications both ESP-IDF and ESPHome code. ESPHome will copy changed source files to device config-directory when compiled, so once changes are made they will stay across devices even if you run `Clean Build Files`.
+For using A/D converter and UART, we need to do some manual modifications both ESP-IDF and ESPHome code. ESPHome will copy changed source files to device config-directory compile-time, so once changes are made they will stay and will be shared with all devices even if you run `Clean Build Files`.
 
 
