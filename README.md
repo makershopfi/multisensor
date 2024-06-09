@@ -26,7 +26,7 @@ Ecosystem will include many different kind of devices to measure enviromental va
   - PCB antenna or external antenna
 
 ### Planned / under development:
-- MultiSensor Basic
+- MultiSensor Advanced
   - ESP32-C6
   - HLK-LD2410 / HLK-LD2410C / HLK-LD2450 24GHz Human Presence Sensor
   - I2C
