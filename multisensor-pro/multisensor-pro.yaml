@@ -1,0 +1,665 @@
+esphome:
+  name: esp32-c6-multisensor-pro
+  friendly_name: esp32-c6-multisensor-pro
+  on_boot:
+    priority: 600
+    then:
+      - output.turn_on: status_led
+
+esp32:
+  board: esp32-c6-devkitc-1
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+    version: 5.2.1
+    platform_version: 6.7.0
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+  variant: esp32c6
+
+# Enable logging
+logger:
+  # UART must be disabled if both are in use (LD24xx and 5v UART)
+  baud_rate: 0
+  #hardware_uart: USB_CDC
+  
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "ENCRYPTION_KEY"
+
+ota:
+  password: "OTA_PASSWORD"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp32-C6-Multisensor-Pro"
+    password: "AP_PASSWORD"
+
+captive_portal:
+    
+
+substitutions:
+  mq7_name: "MQ7"
+  mq7_id: "mq7"
+  # Both pins are 3.3V compatible and can be directly connected to the ESP
+  mq7_heater_pin: "8"
+  mq7_analog_pin: "0"
+  # Voltage divider values
+  mq7_low_side_resistor: "1000"
+  mq7_high_side_resistor: "510"
+  mq7_supply_voltage: "4.85V"
+  # Temperature / Humidity Compensation
+  # replace "temperature" with the id of your temperature sensor (celsius) and "humidity" with the id of your humidity sensor
+  temperature_sensor_id: "bme280_temp"
+  humidity_sensor_id: "bme280_hum"
+  # Calibration: place the sensor in clean air (outdoor) for a few hours and use the value of mq7_compensated_resistance
+  mq7_clean_air_compensated_resistance: "55000"
+
+
+font:
+  - file: "gfonts://Roboto"
+    id: fonts
+    size: 25
+    glyphs:
+      ['&', '@', '!', ',', '.', '?', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
+       '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+       'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+       'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+       'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+       'u', 'v', 'w', 'x', 'y', 'z','å', 'Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', '/']   
+  - file: "gfonts://Roboto"
+    id: kello
+    size: 35
+  - file: "gfonts://Roboto"
+    id: pvm
+    size: 30
+
+image:
+  - file: mdi:emoticon-cool-outline
+    id: emoticoncooloutline
+    resize: 75x75
+  - file: mdi:emoticon-happy-outline
+    id: emoticonhappy
+    resize: 75x75
+  - file: mdi:emoticon-neutral-outline
+    id: emoticonneutral
+    resize: 75x75
+  - file: mdi:emoticon-sad-outline
+    id: emoticonsad
+    resize: 75x75
+  - file: mdi:emoticon-dead-outline
+    id: emoticondead
+    resize: 75x75
+  - file: mdi:smoke-detector-variant-off
+    id: emoticondetector
+    resize: 75x75
+  
+  - file: mdi:motion-sensor
+    id: liike
+    resize: 75x75
+
+  - file: mdi:motion-sensor-off
+    id: liike_pois
+    resize: 75x75
+
+  - file: mdi:brightness-7
+    id: kirkkaus
+    resize: 47x47
+  - file: mdi:thermometer
+    id: lampotila
+    resize: 47x47
+  - file: mdi:water-percent
+    id: kosteus
+    resize: 47x47
+  - file: mdi:gauge
+    id: paine
+    resize: 45x45
+
+color:
+  - id: my_red
+    red: 100%
+    green: 3%
+    blue: 5%
+  - id: my_white
+    red: 100%
+    green: 100%
+    blue: 100%
+  - id: my_green
+    red: 3%
+    green: 100%
+    blue: 5%
+  - id: my_blue
+    red: 3%
+    green: 5%
+    blue: 100%
+time:
+  - platform: homeassistant
+    id: ntp
+
+
+output:
+  # Status LED GPIO pin
+  - platform: gpio
+    pin: 23
+    id: status_led
+    
+  # Display backlight GPIO pin
+  - platform: ledc
+    pin: 15
+    id: tausta_valo
+
+  # MQ-7 heater GPIO pin
+  - platform: gpio
+    pin: ${mq7_heater_pin}
+    id: ${mq7_id}_heater_pin
+
+light:
+  # Display backlight on
+  - platform: monochromatic
+    output: tausta_valo
+    name: "taustavalo"
+    id: taustavalo
+    restore_mode: ALWAYS_ON
+
+interval:
+  - interval: 150s
+    then:
+      - switch.turn_on: ${mq7_id}_heater
+      - logger.log: "${mq7_name}: The sensor is heating!"
+      - delay: 55s
+      - switch.turn_off: ${mq7_id}_heater
+      - logger.log: "${mq7_name}: The sensor is measuring!"
+      - delay: 90s
+      - if:
+          condition:
+            - switch.is_off: ${mq7_id}_heater
+          then:
+            - component.update: ${mq7_id}_raw
+            - logger.log: "${mq7_name}: Done"
+            - switch.turn_on: ${mq7_id}_heater
+            - delay: 5s
+
+
+# ADS1220 ESPHome pull request
+external_components:
+  - source: github://pr#6433
+    components: [ ads1220 ]
+
+
+uart:
+  # LD2410C UART
+  - id: ld2410_uart
+    tx_pin: 2
+    rx_pin: 3
+    baud_rate: 256000
+    parity: NONE
+    stop_bits: 1
+  # 5v UART
+  - id: uart_bus0
+    tx_pin: 16
+    rx_pin: 17
+    baud_rate: 115200
+    debug:
+      direction: BOTH
+      dummy_receiver: true
+      sequence:
+        - lambda: UARTDebug::log_string(direction, bytes);
+  
+
+ld2410:
+  uart_id: ld2410_uart
+
+i2c:
+  id: i2c_bus0
+  sda: 10
+  scl: 11
+  scan: true
+
+spi:
+  id: spi_bus0
+  clk_pin: 4
+  miso_pin: 5
+  mosi_pin: 6
+  interface: hardware
+
+
+ads1220:
+  id: ads1220_module
+  spi_id: spi_bus0
+  cs_pin: 7
+  drdy_pin: 21
+  
+
+display:
+  - platform: st7789v
+    id: display_st7789
+    model: LILYGO T-Embed 170X320
+    backlight_pin: no
+    cs_pin: 18
+    dc_pin: 19
+    reset_pin: 20
+    rotation: 90
+    update_interval: 1s
+    pages:
+      - id: page1
+        lambda: |-
+          auto blue = Color(0, 0, 255);
+          it.rectangle(0, 0, 95, 170, blue);
+          it.rectangle(100, 0, 125, 95, blue);
+          it.rectangle(230, 0, 85, 170, blue);
+          it.strftime(105, 5, id(pvm), "%d-%m-%y", id(ntp).now());
+          it.strftime(120, 45, id(kello), "%H:%M", id(ntp).now());
+
+          it.image(0, 10, id(lampotila), id(my_red));
+          it.printf(50, 20, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(bme280_temp).state));
+          it.image(0, 65, id(kosteus), id(my_blue));
+          it.printf(50, 75, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(bme280_hum).state));
+          it.image(0, 115, id(paine), id(my_blue));
+          it.printf(50, 125, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(bme280_press).state));
+          if (id(voc_index).state == "Loistava") {
+            it.image(230, 10, id(emoticoncooloutline), id(my_green));    
+          } else if (id(voc_index).state == "Hyvä") {
+            it.image(230, 5, id(emoticonhappy), id(my_green));
+          } else if (id(voc_index).state == "Kohtalainen") {
+            it.image(230, 5, id(emoticonneutral), id(my_blue));
+          } else if (id(voc_index).state == "Huono") {
+            it.image(230, 5, id(emoticonsad), id(my_blue));
+          } else if (id(voc_index).state == "Epäterveellistä") {
+            it.image(230, 5, id(emoticondead), id(my_red));
+          } else if (id(voc_index).state == "Ei saatavilla") {
+            it.image(230, 5, id(emoticondetector), id(my_red));
+          }
+          it.image(110, 110, id(kirkkaus), id(my_blue));
+          it.printf(157, 127, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(veml7700_ambient_light).state));
+
+
+          if (id(moving_target_detected).state) {
+              it.image(230, 100, id(liike), id(my_green));
+          } else if (id(still_target_detected).state) {
+              it.image(230, 100, id(liike), id(my_blue));
+          } else {
+              it.image(230, 100, id(liike_pois), id(my_red));
+          }
+
+
+sensor:
+  # ADS1220
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch0
+    name: ADS1220 CH0 Voltage
+    multiplexer: A0_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    # ADS1220 measures 5v but code does not yet support vref (used only in calculation) set to 5v so do it here
+    filters:
+      - multiply: 1.515151515
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch1
+    name: ADS1220 CH1 Voltage
+    multiplexer: A1_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    filters:
+      - multiply: 1.515151515
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch2
+    name: ADS1220 CH2 Voltage
+    multiplexer: A2_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    filters:
+      - multiply: 1.515151515
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch3
+    name: ADS1220 CH3 Voltage
+    multiplexer: A3_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    filters:
+      - multiply: 1.515151515
+
+
+
+  # DHT22
+  - platform: dht
+    pin: 22
+    temperature:
+      id: dht22_temp
+      name: "DHT22 Temperature"
+    humidity:
+      id: dht22_hum
+      name: "DHT22 Humidity"
+    update_interval: 5s
+
+
+
+  # VEML7700
+  - platform: veml7700
+    address: 0x10
+    update_interval: 5s
+
+    ambient_light:
+      id: veml7700_ambient_light
+      name: "VEML7700 Ambient light"
+    actual_gain:
+      id: veml7700_actual_gain
+      name: "VEML7700 Actual gain"
+
+
+  # BME280 I2C
+  - platform: bme280_i2c
+    address: 0x76
+    update_interval: 5s
+    temperature:
+      id: bme280_temp
+      name: "BME280 Temperature"
+    pressure:
+      id: bme280_press
+      name: "BME280 Pressure"
+    humidity:
+      id: bme280_hum
+      name: "BME280 Humidity"
+
+
+  # SGP40
+  - platform: sgp4x
+    address: 0x59
+    update_interval: 5s
+    voc:
+      id: sgp40_voc_index
+      name: "SGP40 VOC Index"
+    compensation:
+      humidity_source: dht22_hum
+      temperature_source: dht22_temp
+
+
+# LD2410C
+  - platform: ld2410
+    light:
+      name: Light
+    moving_distance:
+      name : Moving Distance
+    still_distance:
+      name: Still Distance
+    moving_energy:
+      name: Move Energy
+    still_energy:
+      name: Still Energy
+    detection_distance:
+      name: Detection Distance
+    g0:
+      move_energy:
+        name: g0 move energy
+      still_energy:
+        name: g0 still energy
+    g1:
+      move_energy:
+        name: g1 move energy
+      still_energy:
+        name: g1 still energy
+    g2:
+      move_energy:
+        name: g2 move energy
+      still_energy:
+        name: g2 still energy
+    g3:
+      move_energy:
+        name: g3 move energy
+      still_energy:
+        name: g3 still energy
+    g4:
+      move_energy:
+        name: g4 move energy
+      still_energy:
+        name: g4 still energy
+    g5:
+      move_energy:
+        name: g5 move energy
+      still_energy:
+        name: g5 still energy
+    g6:
+      move_energy:
+        name: g6 move energy
+      still_energy:
+        name: g6 still energy
+    g7:
+      move_energy:
+        name: g7 move energy
+      still_energy:
+        name: g7 still energy
+    g8:
+      move_energy:
+        name: g8 move energy
+      still_energy:
+        name: g8 still energy
+
+  # MQ-7
+  - platform: adc
+    id: ${mq7_id}_raw
+    name: "${mq7_name} Voltage"
+    entity_category: diagnostic
+    disabled_by_default: True
+    pin: ${mq7_analog_pin}
+    attenuation: auto
+    update_interval: never
+  - platform: resistance
+    id: ${mq7_id}_resistance
+    name: "${mq7_name} Resistance"
+    icon: mdi:omega
+    entity_category: diagnostic
+    disabled_by_default: True
+    sensor: ${mq7_id}_raw
+    configuration: UPSTREAM
+    resistor: ${mq7_low_side_resistor}
+    reference_voltage: ${mq7_supply_voltage}
+    filters:
+      - lambda: return (x - ${mq7_high_side_resistor});
+    on_value:
+      then:
+        - component.update: ${mq7_id}_compensated_resistance
+  - platform: template
+    id: ${mq7_id}_compensated_resistance
+    name: "${mq7_name} Compensated Resistance"
+    icon: mdi:omega
+    entity_category: diagnostic
+    unit_of_measurement: Ω
+    lambda: |-
+      return (id(${mq7_id}_resistance).state / ( -0.01223333 * id(${temperature_sensor_id}).state -0.00609615 * id(${humidity_sensor_id}).state + 1.70860897));
+#      return (id(${mq7_id}_resistance).state / ( -0.01223333 * 25 -0.00609615 * 33 + 1.70860897));
+    update_interval: never
+    on_value:
+      then:
+        - component.update: ${mq7_id}_ratio
+  - platform: template
+    id: ${mq7_id}_ratio
+    name: "${mq7_name} Ratio"
+    icon: mdi:percent
+    entity_category: diagnostic
+    disabled_by_default: True
+    unit_of_measurement: "%"
+    lambda: |-
+        return 100.0 * (id(${mq7_id}_compensated_resistance).state / ${mq7_clean_air_compensated_resistance});
+    update_interval: never
+    on_value:
+      then:
+        - component.update: ${mq7_id}_co
+  - platform: template
+    id: ${mq7_id}_co
+    name: "${mq7_name} Carbon Monoxide"
+    unit_of_measurement: "ppm"
+    device_class: carbon_monoxide
+    lambda: |-
+      auto ratio_ln = log(id(${mq7_id}_ratio).state / 100.0);
+      return exp(-0.685204 - 2.67936 * ratio_ln - 0.488075 * ratio_ln * ratio_ln - 0.07818 * ratio_ln * ratio_ln * ratio_ln);
+    update_interval: never
+
+number:
+  - platform: ld2410
+    timeout:
+      name: Timeout
+    light_threshold:
+      name: Light Threshold
+    max_move_distance_gate:
+      name: Max Move Distance Gate
+    max_still_distance_gate:
+      name: Max Still Distance Gate
+    g0:
+      move_threshold:
+        name: g0 move threshold
+      still_threshold:
+        name: g0 still threshold
+    g1:
+      move_threshold:
+        name: g1 move threshold
+      still_threshold:
+        name: g1 still threshold
+    g2:
+      move_threshold:
+        name: g2 move threshold
+      still_threshold:
+        name: g2 still threshold
+    g3:
+      move_threshold:
+        name: g3 move threshold
+      still_threshold:
+        name: g3 still threshold
+    g4:
+      move_threshold:
+        name: g4 move threshold
+      still_threshold:
+        name: g4 still threshold
+    g5:
+      move_threshold:
+        name: g5 move threshold
+      still_threshold:
+        name: g5 still threshold
+    g6:
+      move_threshold:
+        name: g6 move threshold
+      still_threshold:
+        name: g6 still threshold
+    g7:
+      move_threshold:
+        name: g7 move threshold
+      still_threshold:
+        name: g7 still threshold
+    g8:
+      move_threshold:
+        name: g8 move threshold
+      still_threshold:
+        name: g8 still threshold
+
+select:
+  - platform: ld2410
+    distance_resolution:
+      name: Distance Resolution
+    baud_rate:
+      name: Baud Rate
+    light_function:
+      name: Light Function
+    out_pin_level:
+      name: Out Pin Level
+
+binary_sensor:
+  # LD2410C Out Pin GPIO pin
+  - platform: gpio
+    pin:
+      number: 1
+      mode:
+        input: true
+    name: LD2410 Presence Status
+    device_class: presence
+
+  - platform: ld2410
+    has_target:
+      name: Presence
+      id: presence_detected
+    has_moving_target:
+      name: Moving Target
+      id: moving_target_detected
+    has_still_target:
+      name: Still Target
+      id: still_target_detected
+    out_pin_presence_status:
+      name: Out Pin Presence Status
+
+switch:
+  - platform: ld2410
+    engineering_mode:
+      name: Engineering Mode
+    bluetooth:
+      name: Control Bluetooth
+
+  - platform: output
+    name: "${mq7_name} Heater"
+    icon: mdi:fire
+    entity_category: diagnostic
+    disabled_by_default: True
+    id: ${mq7_id}_heater
+    output: ${mq7_id}_heater_pin
+
+button:
+  - platform: ld2410
+    factory_reset:
+      name: Factory Reset
+    restart:
+      name: Restart
+    query_params:
+      name: Query Params
+
+text_sensor:
+  - platform: ld2410
+    version:
+      name: Firmware Version
+    mac_address:
+      name: MAC
+
+  - platform: template
+    name: "VOC Index"
+    id: voc_index
+    lambda: |-
+      if (id(sgp40_voc_index).state < 150)
+        return {"Loistava"};
+      else if (id(sgp40_voc_index).state < 250)
+        return {"Hyvä"};
+      else if (id(sgp40_voc_index).state < 350)
+        return {"Kohtalainen"};
+      else if (id(sgp40_voc_index).state < 450)
+        return {"Huono"};
+      else if (id(sgp40_voc_index).state < 550)
+        return {"Epäterveellistä"};
+      else
+        return {"Ei saatavilla"};
