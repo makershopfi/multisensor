@@ -9,7 +9,7 @@ File multisensor-pro.yaml is basic example config with default settings to start
 - LD2410C 24GHz Human Presence Sensor (UART)
 - DHT22 Temperature and Humidity Sensor(1-Wire)
 - VEML7700 Ambient Light Sensor (I2C)
-- BME280 Temperature, pressure and Humidity Sensor (I2C)
+- BME280 Temperature, Pressure and Humidity Sensor (I2C)
 - SGP40 VOC Index Sensor (I2C)
 - 5v UART
 - MQ-7 Carbon Monoxide Gas Sensor
