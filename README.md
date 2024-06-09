@@ -6,22 +6,22 @@ MakerShop Smart Home Ecosystem is collection of devices that are flashed with ES
 
 ## Devices
 
-Ecosystem will include many different kind of devices to measure enviromental variables such as human presence, temperature, humidity, pressure, ambient light, VOC index etc. and to control devices like air conditioning and lighting.
+Ecosystem will include many different kind of devices to measure enviromental variables such as human presence, temperature, humidity, pressure, ambient light, VOC index etc. and to control devices like air conditioning and lighting. Below is info about boards with default setups. Of course all I/O ports can be configured as user likes, but these are the intended default configurations.
 
 ### Already available:
 - MultiSensor Pro
   - ESP32-C6
   - HLK-LD2410 / HLK-LD2410C / HLK-LD2450 24GHz Human Presence Sensor
-  - 9x I2C
-  - 2x SPI (Display / ADS1220)
-  - 1-Wire
+  - 9x I2C (2x5 header have two most usual I2C sensor board pinouts and JST can connect to any pinout)
+  - 2x SPI (1.9" TFT Display + ADS1220)
+  - 1x 1-Wire (2x connectors for 5v, GND and signal)
   - UART (5v I/O)
   - MQ-series sensors (5v out, 3.3v I/O)
   - PCB antenna or external antenna
   
 - MultiSensor Mini
   - ESP32-C6
-  - 4x I/O (I2C or SPI)
+  - 4x I/O (I2C / SPI)
   - UART (5v I/O)
   - PCB antenna or external antenna
 
