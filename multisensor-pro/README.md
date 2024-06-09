@@ -1,6 +1,6 @@
-# Multisensor Pro
+# MultiSensor Pro
 
-![Multisensor Pro](../images/multisensor-pro.jpg)
+![MultiSensor Pro](../images/multisensor-pro.jpg)
 
 ### Default config
 
