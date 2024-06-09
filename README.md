@@ -35,7 +35,7 @@ Ecosystem will include many different kind of devices to measure enviromental va
   - UART (5v I/O)
   - PCB antenna or external antenna
 - VoiceControl
-- RelayControl Mini / Basic / Pro
+- RelayControl
 - LEDControl
 
 ## Installing ESPHome
