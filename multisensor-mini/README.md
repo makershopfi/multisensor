@@ -1,6 +1,6 @@
-# Multisensor Mini
+# MultiSensor Mini
 
-![Multisensor Mini](../images/multisensor-mini.jpg)
+![MultiSensor Mini](../images/multisensor-mini.jpg)
 
 ### Default config
 
