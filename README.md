@@ -6,7 +6,7 @@ MakerShop Smart Home Platform is collection of devices that are flashed with ESP
 
 ## Devices
 
-Ecosystem will include many different kind of devices to measure enviromental variables such as human presence, temperature, humidity, pressure, ambient light, VOC index etc. and to control devices like air conditioning and lighting. Below is info about boards with default setups. All I/O ports can be configured as user likes, but these are the intended default configurations.
+Platform will include many different kind of devices to measure enviromental variables such as human presence, temperature, humidity, pressure, ambient light, VOC index etc. and to control devices like air conditioning and lighting. Below is info about boards with default setups. All I/O ports can be configured as user likes, but these are the intended default configurations.
 
 ### Already available:
 - MultiSensor Pro
