@@ -12,11 +12,11 @@ Platform will grow with many different kind of devices to measure enviromental v
 - MultiSensor Pro
   - ESP32-C6
   - HLK-LD2410 / HLK-LD2410C / HLK-LD2450 24GHz Human Presence Sensor
-  - 9x I2C (2x5 header have two most usual I2C sensor board pinouts and JST can connect to any pinout)
+  - 9x I2C (2x5 header have two most usual I2C sensor board pinouts and JST PH that can connect to any pinout)
   - 2x SPI (1.9" TFT Display + ADS1220)
-  - 1x 1-Wire (2x connectors for 5v, GND and signal)
+  - 1x 1-Wire (2x connectors for 5v, GND and signal for easier to connect multiple sensors)
   - UART (5v I/O)
-  - MQ-series sensors (5v out, 3.3v I/O)
+  - MQ-series gas sensors (5v out, 3.3v I/O)
   - PCB antenna or external antenna
   
 - MultiSensor Mini
@@ -50,7 +50,7 @@ Platform will grow with many different kind of devices to measure enviromental v
 ### Using ESPHome dashboard
 [ESPHome Dashboard](https://esphome.io/guides/getting_started_command_line.html#bonus-esphome-dashboard)
 
-In Linux, I have done alias in .bashrc so I can use command `get_esphome` to dive into ESPHome environment and start dashboard:
+In Linux, I have done alias in .bashrc-file so I can use command `get_esphome` to dive into ESPHome environment and start dashboard:
 
 `alias get_esphome='source $HOME/.esp/esphome/bin/activate && esphome dashboard $HOME/.esp/esphome/config/'`
 
@@ -82,4 +82,4 @@ Also we need to change `logger`-section:
 
 #### You need to build your device once with changes in esp32-section mentioned above to let ESPHome to download all necessary ESP-IDF framework files.
 
-For using A/D converter and UART, some manual modifications is needed for both, ESP-IDF and ESPHome code. ESPHome will copy changed source files to device config-directory compile-time, so once changes are made they will stay and will be shared with all devices build afterwards even if you run `Clean Build Files`. Changes can be found [here](https://github.com/makershopfi/smarthome/tree/main/.platformio/packages/framework-espidf/components/esp_adc/deprecated) and [here](https://github.com/makershopfi/smarthome/tree/main/esphome/lib/python3.12/site-packages/esphome/components)
+For using ESP32-C6 native A/D converter and UART, some manual modification is needed for both, ESP-IDF and ESPHome code. ESPHome will copy changed source files to device config-directory compile-time, so once changes are made they will stay and will be shared with all devices build afterwards even if you run `Clean Build Files`. Changes can be found [here](https://github.com/makershopfi/smarthome/tree/main/.platformio/packages/framework-espidf/components/esp_adc/deprecated) and [here](https://github.com/makershopfi/smarthome/tree/main/esphome/lib/python3.12/site-packages/esphome/components)
