@@ -60,21 +60,25 @@ Just adjust esphome install path and place to store your config files according 
 
 ESP32-C6 is relatively new chip from Espressif and ESPHome is defaulting to ESP-IDF v4.4 that doesn't yet support C6 model. Also Arduino framework in ESPHome doesn't support it. So we need to use atleast ESP-IDF v5.1 to succesfully compile code in ESPHome to this chip. Fortunately, this is made quite easy to achieve, we only need to declare what version we want to use. So replace esp32-section in start of your devices .yaml-file with following code:
 
-- `esp32:`
-- `  board: esp32-c6-devkitc-1`
-- `  flash_size: 4MB`
-- `  framework:`
-- `    type: esp-idf`
-- `    version: 5.2.1`
-- `    platform_version: 6.7.0`
-- `    sdkconfig_options:`
-- `      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y`
-- `  variant: esp32c6`
+```
+esp32:
+  board: esp32-c6-devkitc-1
+  flash_size: 4MB
+  framework:
+    type: esp-idf
+    version: 5.2.1
+    platform_version: 6.7.0
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y
+  variant: esp32c6
+```
 
 Also we need to change `logger`-section:
-- `# Enable logging`
-- `logger:`
-- `  hardware_uart: USB_CDC`
+```
+# Enable logging
+logger:
+  hardware_uart: USB_CDC
+```
 
 ...and code should compile with no problem.
 
