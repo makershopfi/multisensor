@@ -52,9 +52,15 @@ Platform will grow with many different kind of devices to measure enviromental v
 
 In Linux, I have done alias in .bashrc-file so I can use command `get_esphome` to dive into ESPHome environment and start dashboard:
 
-`alias get_esphome='source $HOME/.esp/esphome/bin/activate && esphome dashboard $HOME/.esp/esphome/config/'`
+```
+alias get_esphome='source $HOME/.esp/esphome/bin/activate && esphome dashboard $HOME/.esp/esphome/config/'
+```
 
-Just adjust esphome install path and place to store your config files according to your choice. Once dashboard is running, open page `http://localhost:6052/` on your browser.
+Just adjust esphome install path and place to store your config files according to your choice. Once dashboard is running, open page
+```
+http://localhost:6052/
+```
+on your browser.
 
 ### Compiling code
 
