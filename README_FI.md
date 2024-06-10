@@ -1,6 +1,6 @@
 # MakerShop MultiSensor-alusta älykoteihin
 
-- [English](./README.md)
+- [In English](./README.md)
 
 MakerShop MultiSensor-alusta älykoteihin on kokoelma laitteita jotka käyttävät ESPHomen generoimaa koodia ja jotka voidaan liittää Home Assistant kotiautomaatiojärjestelmään.
 
