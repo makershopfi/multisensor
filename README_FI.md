@@ -58,7 +58,7 @@ Muuta tarvittaessa ESPhomen asennuspolku ja kansio johon haluat ESPHomen tallent
 
 ### Koodin kääntäminen
 
-ESP32-C6 on suhteellisen uusi tuttavuusa Espressifiltä ja ESPHome uusin tuettu ESP-IDF versio on 4.4 joka ei vielä C6-versiota tue, kuten ei myöskään Arduinon ympäristö. ESP-IDF pitää olla vähintään veriota 5.1 jotta tuki C6-mallille löytyy. Onneksi ESPHomessa tämä on tehty kohtuullisen helpoksi, tarvitsee vain määritellä mitä versioita haluaa käyttää. Versiot määritellään .yaml-tiedoston alkupuolella esp32-osiossa alla olevan mukaisesti:
+ESP32-C6 on suhteellisen uusi tuttavuus Espressifiltä ja ESPHomessa uusin virallinen ESP-IDF versio on 4.4 joka ei vielä C6-versiota tue, kuten ei myöskään Arduinon ympäristö. ESP-IDF pitää olla vähintään veriota 5.1 jotta tuki C6-mallille löytyy. Onneksi ESPHomessa tämä on tehty kohtuullisen helpoksi, tarvitsee vain määritellä mitä versioita haluaa käyttää. Versiot määritellään .yaml-tiedoston alkupuolella esp32-osiossa alla olevan mukaisesti:
 
 - `esp32:`
 - `  board: esp32-c6-devkitc-1`
@@ -71,7 +71,7 @@ ESP32-C6 on suhteellisen uusi tuttavuusa Espressifiltä ja ESPHome uusin tuettu 
 - `      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y`
 - `  variant: esp32c6`
 
-Myös `logger`-osioon lisätään käytettävä loggaus-liitäntä:
+Myös `logger`-osioon lisätään käytettävä loggaus-liityntä:
 - `# Enable logging`
 - `logger:`
 - `  hardware_uart: USB_CDC`
