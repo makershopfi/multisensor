@@ -80,7 +80,6 @@ Also we need to change `logger`-section:
 
 ### Using ADC and UART
 
-For using A/D converter and UART, some manual modifications is needed for both, ESP-IDF and ESPHome code. ESPHome will copy changed source files to device config-directory compile-time, so once changes are made they will stay and will be shared with all devices even if you run `Clean Build Files`. Changes can be found [here](https://github.com/makershopfi/smarthome/tree/main/.platformio/packages/framework-espidf/components/esp_adc/deprecated) and [here](https://github.com/makershopfi/smarthome/tree/main/esphome/lib/python3.12/site-packages/esphome/components)
-
 #### You need to build your device once with changes in esp32-section mentioned above to let ESPHome to download all necessary files.
 
+For using A/D converter and UART, some manual modifications is needed for both, ESP-IDF and ESPHome code. ESPHome will copy changed source files to device config-directory compile-time, so once changes are made they will stay and will be shared with all devices build afterwards even if you run `Clean Build Files`. Changes can be found [here](https://github.com/makershopfi/smarthome/tree/main/.platformio/packages/framework-espidf/components/esp_adc/deprecated) and [here](https://github.com/makershopfi/smarthome/tree/main/esphome/lib/python3.12/site-packages/esphome/components)
