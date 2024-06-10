@@ -52,7 +52,9 @@ MultiSensor-alusta tulee kasvamaan monenlaisilla laitteilla joilla voi seurata e
 
 Linuxissa olen tehnyt aliaksen .bashrc-tiedostoon jolloin voin antaa komennon `get_esphome` siirtyäkseni ESPHome-ympäristön sisään ja käynnistämään dashboardin:
 
-`alias get_esphome='source $HOME/.esp/esphome/bin/activate && esphome dashboard $HOME/.esp/esphome/config/'`
+```
+alias get_esphome='source $HOME/.esp/esphome/bin/activate && esphome dashboard $HOME/.esp/esphome/config/'
+```
 
 Muuta tarvittaessa ESPhomen asennuspolku ja kansio johon haluat ESPHomen tallentavan laitteiden asetustiedostot ja lähdekoodit. Kun dashboard on käynnissä, avaa selaimessa sivu `http://localhost:6052/` niin pääset lisäämään / muokkaamaan laitteita.
 
@@ -73,21 +75,12 @@ esp32:
   variant: esp32c6
 ```
 
-- `esp32:`
-- `  board: esp32-c6-devkitc-1`
-- `  flash_size: 4MB`
-- `  framework:`
-- `    type: esp-idf`
-- `    version: 5.2.1`
-- `    platform_version: 6.7.0`
-- `    sdkconfig_options:`
-- `      CONFIG_ESPTOOLPY_FLASHSIZE_4MB: y`
-- `  variant: esp32c6`
-
 Myös `logger`-osioon lisätään käytettävä loggaus-liityntä:
-- `# Enable logging`
-- `logger:`
-- `  hardware_uart: USB_CDC`
+```
+# Enable logging
+logger:
+  hardware_uart: USB_CDC
+```
 
 ...ja nyt koodin pitäisi kääntyä ongelmitta.
 
