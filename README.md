@@ -54,7 +54,7 @@ Just adjust esphome install path and place to store your config files according 
 
 ### Compiling code
 
-ESP32-C6 is relatively new chip from Espressif and ESPHome is defaulting to ESP-IDF v4.4 that doesn't yet support C6 model. Also Arduino framework in ESPHome doesn't support it. So we need to use atleast ESP-IDF v5.1 to succesfully compile code in ESPHome to this chip. Fortunately, this is made quite easy to achieve, we only need to declare what version we want to use. So replace `esp32:`-section in start of your devices .yaml-file with following code:
+ESP32-C6 is relatively new chip from Espressif and ESPHome is defaulting to ESP-IDF v4.4 that doesn't yet support C6 model. Also Arduino framework in ESPHome doesn't support it. So we need to use atleast ESP-IDF v5.1 to succesfully compile code in ESPHome to this chip. Fortunately, this is made quite easy to achieve, we only need to declare what version we want to use. So replace esp32-section in start of your devices .yaml-file with following code:
 
 - `esp32:`
 - `  board: esp32-c6-devkitc-1`
@@ -78,4 +78,5 @@ Also we need to change `logger`-section:
 
 For using A/D converter and UART, some manual modifications is needed for both, ESP-IDF and ESPHome code. ESPHome will copy changed source files to device config-directory compile-time, so once changes are made they will stay and will be shared with all devices even if you run `Clean Build Files`. Changes can be found [here](https://github.com/makershopfi/smarthome/tree/main/.platformio/packages/framework-espidf/components/esp_adc/deprecated) and [here](https://github.com/makershopfi/smarthome/tree/main/esphome/lib/python3.12/site-packages/esphome/components)
 
+### You need to build your device once with changes in esp32-section mentioned above to let ESPHome to download all necessary files.
 
