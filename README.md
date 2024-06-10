@@ -50,7 +50,7 @@ In Linux, I have done alias in .bashrc so I can use command `get_esphome` to div
 
 `alias get_esphome='source $HOME/.esp/esphome/bin/activate && esphome dashboard $HOME/.esp/esphome/config/'`
 
-Just adjust esphome install path and place to store your config files according to your choice.
+Just adjust esphome install path and place to store your config files according to your choice. Once dashboard is running, open page `http://localhost:6052/` on your browser.
 
 ### Compiling code
 
