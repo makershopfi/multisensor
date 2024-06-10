@@ -652,14 +652,14 @@ text_sensor:
     id: voc_index
     lambda: |-
       if (id(sgp40_voc_index).state < 150)
-        return {"Loistava"};
+        return {"Perfect"};
       else if (id(sgp40_voc_index).state < 250)
-        return {"Hyvä"};
+        return {"Good"};
       else if (id(sgp40_voc_index).state < 350)
-        return {"Kohtalainen"};
+        return {"Ok"};
       else if (id(sgp40_voc_index).state < 450)
-        return {"Huono"};
+        return {"Bad"};
       else if (id(sgp40_voc_index).state < 550)
-        return {"Epäterveellistä"};
+        return {"Unhealthy"};
       else
-        return {"Ei saatavilla"};
+        return {"Unavailable"};
