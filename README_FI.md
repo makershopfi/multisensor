@@ -56,7 +56,11 @@ Linuxissa olen tehnyt aliaksen .bashrc-tiedostoon jolloin voin antaa komennon `g
 alias get_esphome='source $HOME/.esp/esphome/bin/activate && esphome dashboard $HOME/.esp/esphome/config/'
 ```
 
-Muuta tarvittaessa ESPhomen asennuspolku ja kansio johon haluat ESPHomen tallentavan laitteiden asetustiedostot ja lähdekoodit. Kun dashboard on käynnissä, avaa selaimessa sivu `http://localhost:6052/` niin pääset lisäämään / muokkaamaan laitteita.
+Muuta tarvittaessa ESPhomen asennuspolku ja kansio johon haluat ESPHomen tallentavan laitteiden asetustiedostot ja lähdekoodit. Kun dashboard on käynnissä, avaa selaimessa sivu
+```
+http://localhost:6052/
+```
+niin pääset lisäämään / muokkaamaan laitteita.
 
 ### Koodin kääntäminen
 
