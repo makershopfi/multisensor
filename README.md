@@ -6,7 +6,7 @@ MakerShop MultiSensor Platform for Smart Homes is collection of devices that are
 
 ## Devices
 
-Platform will include many different kind of devices to measure enviromental variables such as human presence, temperature, humidity, pressure, ambient light, VOC index etc. and to control devices like air conditioning and lighting. Below is info about boards with default setups. All I/O ports can be configured as user likes, but these are the intended default configurations.
+Platform will grow with many different kind of devices to measure enviromental variables such as human presence, temperature, humidity, pressure, ambient light, VOC index etc. and to control devices like air conditioning and lighting. Below is info about boards with default setups. All I/O ports can be configured as user likes, but these are the intended default configurations.
 
 ### Already available:
 - MultiSensor Pro
@@ -25,6 +25,9 @@ Platform will include many different kind of devices to measure enviromental var
   - UART (5v I/O)
   - PCB antenna or external antenna
 
+- MultiSensor Mini Shield
+  - MQ-7 CO Gas Sensor
+    
 ### Planned / under development:
 - MultiSensor Advanced
   - ESP32-C6
@@ -34,6 +37,7 @@ Platform will include many different kind of devices to measure enviromental var
   - 1-Wire
   - UART (5v I/O)
   - PCB antenna or external antenna
+- MultiSensor Mini Shields
 - MultiSensor Voice
 - MultiSensor Relay
 - MultiSensor LED
