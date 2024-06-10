@@ -1,8 +1,8 @@
-# MakerShop Smart Home Ecosystem
+# MakerShop Smart Home Platform
 
 * [Suomeksi](./README_FI.md)
 
-MakerShop Smart Home Ecosystem is collection of devices that are flashed with ESPHome generated code and controlled with Home Assistant home automation system.
+MakerShop Smart Home Platform is collection of devices that are flashed with ESPHome generated code and controlled with Home Assistant home automation system.
 
 ## Devices
 
