@@ -1,8 +1,8 @@
-# MakerShop Smart Home Platform
+# MakerShop MultiSensor Platform for Smart Homes
 
 * [Suomeksi](./README_FI.md)
 
-MakerShop Smart Home Platform is collection of devices that are flashed with ESPHome generated code and controlled with Home Assistant home automation system.
+MakerShop MultiSensor Platform for Smart Homes is collection of devices that are flashed with ESPHome generated code and controlled with Home Assistant home automation system.
 
 ## Devices
 
