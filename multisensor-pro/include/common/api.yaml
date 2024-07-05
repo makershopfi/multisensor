@@ -1,0 +1,4 @@
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "top-secret-api-key"

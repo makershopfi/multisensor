@@ -1,0 +1,4 @@
+ota:
+  - platform: esphome
+    password: "top-secret-ota-password"
+

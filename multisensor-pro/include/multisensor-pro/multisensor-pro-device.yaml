@@ -1,0 +1,62 @@
+esphome:
+  name: ${name}
+  friendly_name: ${friendly_name}
+#  on_boot:
+#  - priority: 900.0
+#    then:
+#      - lambda: |-
+#          id(cpu_speed) = board_build.f_cpu;
+
+globals:
+  - id: cpu_speed
+    type: int
+    restore_value: no
+    initial_value: "0"
+    
+sensor:
+    #Device UPTIME
+  - platform: uptime
+    name: "Uptime"
+    id: sys_uptime
+    update_interval: 10s
+    #Device CPU Speed
+#  - platform: template
+#    name: "ESP Cpu Speed"
+#    accuracy_decimals: 0
+#    unit_of_measurement: Mhz
+#    lambda: |-
+#      return (id(cpu_speed));
+#    entity_category: "diagnostic"
+    #Device Memory
+  - platform: template
+    id: esp_memory
+    icon: mdi:memory
+    name: ESP Free Memory
+    lambda: return heap_caps_get_free_size(MALLOC_CAP_INTERNAL) / 1024;
+    unit_of_measurement: "kB"
+    state_class: measurement
+    entity_category: "diagnostic"
+    #Device Temperature
+  - platform: internal_temperature
+    id: esp32c6_internal_temperature
+    name: "ESP32-C6 Temperature"
+    unit_of_measurement: °C
+    device_class: TEMPERATURE
+    update_interval: 2s
+    #Device RSSI
+  - platform: wifi_signal
+    name: "WiFi signal"
+    id: wifi_signal_db
+    update_interval: 2s
+    entity_category: "diagnostic"
+
+button:
+  - platform: restart
+    icon: mdi:power-cycle
+    id: reboot_btn
+    name: "MultiSensor Pro Reboot"
+  - platform: factory_reset
+    icon: mdi:power-cycle
+    id: factory_reset_btn
+    name: "MultiSensor Pro Factory Reset"
+

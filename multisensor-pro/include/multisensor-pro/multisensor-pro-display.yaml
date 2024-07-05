@@ -1,0 +1,141 @@
+font:
+  - file: "gfonts://Roboto"
+    id: fonts
+    size: 25
+    glyphs:
+      ['&', '@', '!', ',', '.', '?', '"', '%', '(', ')', '+', '-', '_', ':', '°', '0',
+       '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+       'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+       'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
+       'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+       'u', 'v', 'w', 'x', 'y', 'z','å', 'Ä', 'ä', 'Ö', 'ö', 'Ü', 'ü', '/']   
+  - file: "gfonts://Roboto"
+    id: kello
+    size: 35
+  - file: "gfonts://Roboto"
+    id: pvm
+    size: 30
+
+image:
+  - file: mdi:emoticon-cool-outline
+    id: emoticoncooloutline
+    resize: 75x75
+  - file: mdi:emoticon-happy-outline
+    id: emoticonhappy
+    resize: 75x75
+  - file: mdi:emoticon-neutral-outline
+    id: emoticonneutral
+    resize: 75x75
+  - file: mdi:emoticon-sad-outline
+    id: emoticonsad
+    resize: 75x75
+  - file: mdi:emoticon-dead-outline
+    id: emoticondead
+    resize: 75x75
+  - file: mdi:smoke-detector-variant-off
+    id: emoticondetector
+    resize: 75x75
+  
+  - file: mdi:motion-sensor
+    id: liike
+    resize: 75x75
+
+  - file: mdi:motion-sensor-off
+    id: liike_pois
+    resize: 75x75
+
+  - file: mdi:brightness-7
+    id: brightness
+    resize: 47x47
+  - file: mdi:thermometer
+    id: temperature
+    resize: 47x47
+  - file: mdi:water-percent
+    id: humidity
+    resize: 47x47
+  - file: mdi:gauge
+    id: pressure
+    resize: 45x45
+
+color:
+  - id: my_red
+    red: 100%
+    green: 3%
+    blue: 5%
+  - id: my_white
+    red: 100%
+    green: 100%
+    blue: 100%
+  - id: my_green
+    red: 3%
+    green: 100%
+    blue: 5%
+  - id: my_blue
+    red: 3%
+    green: 5%
+    blue: 100%
+
+output:
+  # Display backlight GPIO pin
+  - platform: ledc
+    pin: 15
+    id: display_backlight_output
+
+light:
+  # Display backlight on
+  - platform: monochromatic
+    output: display_backlight_output
+    name: "Display Backlight"
+    id: display_backlight
+    restore_mode: ALWAYS_ON
+
+display:
+  - platform: st7789v
+    id: display_st7789
+    model: LILYGO T-Embed 170X320
+    backlight_pin: no
+    cs_pin: 18
+    dc_pin: 19
+    reset_pin: 20
+    rotation: 90
+    update_interval: 1s 
+    pages:
+      - id: page1
+        lambda: |-
+          auto blue = Color(0, 0, 255);
+          it.rectangle(0, 0, 95, 170, blue);
+          it.rectangle(100, 0, 125, 95, blue);
+          it.rectangle(230, 0, 85, 170, blue);
+          it.strftime(105, 5, id(pvm), "%d-%m-%y", id(ntp).now());
+          it.strftime(120, 45, id(kello), "%H:%M", id(ntp).now());
+
+          it.image(0, 10, id(temperature), id(my_red));
+          it.printf(50, 20, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(bme280_temp).state));
+          it.image(0, 65, id(humidity), id(my_blue));
+          it.printf(50, 75, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(bme280_hum).state));
+          it.image(0, 115, id(pressure), id(my_blue));
+          it.printf(50, 125, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(bme280_press).state));
+          if (id(voc_index).state == "Perfect") {
+            it.image(230, 10, id(emoticoncooloutline), id(my_green));    
+          } else if (id(voc_index).state == "Good") {
+            it.image(230, 5, id(emoticonhappy), id(my_green));
+          } else if (id(voc_index).state == "Ok") {
+            it.image(230, 5, id(emoticonneutral), id(my_blue));
+          } else if (id(voc_index).state == "Bad") {
+            it.image(230, 5, id(emoticonsad), id(my_blue));
+          } else if (id(voc_index).state == "Unhealthy") {
+            it.image(230, 5, id(emoticondead), id(my_red));
+          } else if (id(voc_index).state == "Unavailable") {
+            it.image(230, 5, id(emoticondetector), id(my_red));
+          }
+          it.image(110, 110, id(brightness), id(my_blue));
+          it.printf(157, 127, id(fonts), TextAlign::TOP_LEFT , "%.0f", round(id(veml7700_ambient_light).state));
+
+
+          if (id(moving_target_detected).state) {
+              it.image(230, 100, id(liike), id(my_green));
+          } else if (id(still_target_detected).state) {
+              it.image(230, 100, id(liike), id(my_blue));
+          } else {
+              it.image(230, 100, id(liike_pois), id(my_red));
+          }

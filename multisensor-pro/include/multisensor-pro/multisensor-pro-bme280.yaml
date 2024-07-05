@@ -1,0 +1,14 @@
+sensor:
+  # BME280 I2C
+  - platform: bme280_i2c
+    address: 0x76
+    update_interval: 5s
+    temperature:
+      id: bme280_temp
+      name: "BME280 Temperature"
+    pressure:
+      id: bme280_press
+      name: "BME280 Pressure"
+    humidity:
+      id: bme280_hum
+      name: "BME280 Humidity"

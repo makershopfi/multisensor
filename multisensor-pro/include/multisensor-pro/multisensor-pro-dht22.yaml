@@ -1,0 +1,11 @@
+sensor:
+  # DHT22
+  - platform: dht
+    pin: 22
+    temperature:
+      id: dht22_temp
+      name: "DHT22 Temperature"
+    humidity:
+      id: dht22_hum
+      name: "DHT22 Humidity"
+    update_interval: 5s

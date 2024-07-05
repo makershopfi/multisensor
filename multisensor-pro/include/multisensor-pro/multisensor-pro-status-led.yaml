@@ -1,0 +1,67 @@
+output:
+  # Status LED GPIO pin
+  - platform: ledc
+    pin: 23
+    id: status_led_output
+    
+light:
+  - platform: monochromatic
+    output: status_led_output
+    name: "Status LED"
+    id: status_led
+    restore_mode: ALWAYS_OFF
+    effects:
+      - pulse:
+      - pulse:
+          name: "Fast Pulse"
+          transition_length: 0.1s      # defaults to 1s
+          update_interval: 0.5s
+      - pulse:
+          name: "Medium Pulse"
+          transition_length: 0.1s
+          update_interval: 1s
+          min_brightness: 0%
+          max_brightness: 100%
+      - pulse:
+          name: "Slow Pulse"
+          transition_length: 0.1s      # defaults to 1s
+          update_interval: 2s
+
+binary_sensor:
+  - platform: homeassistant
+    id: moving_target_detected_1
+    entity_id: binary_sensor.esp32_c6_multisensor_pro_moving_target
+    on_press:
+      - script.execute: control_led_moving_target_detected
+    on_release:
+      - script.execute: control_led_still_target_detected
+  - platform: homeassistant
+    id: still_target_detected_1
+    entity_id: binary_sensor.esp32_c6_multisensor_pro_still_target
+    on_press:
+      - script.execute: control_led_still_target_detected
+  - platform: homeassistant
+    id: no_presence_detected_1
+    entity_id: binary_sensor.esp32_c6_multisensor_pro_still_target
+    on_release:
+      - script.execute: control_led_no_presence_detected
+
+script:
+  - id: control_led_no_presence_detected
+    then:
+      - light.turn_on:
+          id: status_led
+          brightness: 100%
+          effect: "Slow Pulse"
+  - id: control_led_still_target_detected
+    then:
+      - light.turn_on:
+          id: status_led
+          brightness: 100%
+          effect: "Medium Pulse"
+  - id: control_led_moving_target_detected
+    then:
+      - light.turn_on:
+          id: status_led
+          brightness: 100%
+          effect: "Fast Pulse"

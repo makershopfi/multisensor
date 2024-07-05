@@ -1,0 +1,29 @@
+sensor:
+  # SGP40
+  - platform: sgp4x
+    address: 0x59
+    update_interval: 5s
+    voc:
+      id: sgp40_voc_index
+      name: "SGP40 VOC Index"
+    compensation:
+      humidity_source: dht22_hum
+      temperature_source: dht22_temp
+
+text_sensor:
+  - platform: template
+    name: "VOC Index"
+    id: voc_index
+    lambda: |-
+      if (id(sgp40_voc_index).state < 150)
+        return {"Perfect"};
+      else if (id(sgp40_voc_index).state < 250)
+        return {"Good"};
+      else if (id(sgp40_voc_index).state < 350)
+        return {"Ok"};
+      else if (id(sgp40_voc_index).state < 450)
+        return {"Bad"};
+      else if (id(sgp40_voc_index).state < 550)
+        return {"Unhealthy"};
+      else
+        return {"Unavailable"};

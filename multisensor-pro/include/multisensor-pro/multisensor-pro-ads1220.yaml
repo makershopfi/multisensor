@@ -1,0 +1,74 @@
+# ADS1220 ESPHome pull request
+external_components:
+  - source: github://pr#6433
+    components: [ ads1220 ]
+
+ads1220:
+  id: ads1220_module
+  spi_id: spi_bus0
+  cs_pin: 7
+  drdy_pin: 21
+
+sensor:
+  # ADS1220
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch0
+    name: ADS1220 CH0 Voltage
+    multiplexer: A0_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    # ADS1220 measures 5v but code does not yet support vref (used only in calculation) set to 5v so do it here
+    filters:
+      - multiply: 1.515151515
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch1
+    name: ADS1220 CH1 Voltage
+    multiplexer: A1_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    filters:
+      - multiply: 1.515151515
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch2
+    name: ADS1220 CH2 Voltage
+    multiplexer: A2_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    filters:
+      - multiply: 1.515151515
+  - platform: ads1220
+    type: adc
+    id: ads1220_ch3
+    name: ADS1220 CH3 Voltage
+    multiplexer: A3_GND
+    gain: '1'
+    datarate: 'DR_LVL_0'
+    vref: 'AVDD_AVSS'
+    conversion_mode: 'SINGLE_SHOT'
+    operation_mode: 'TURBO'
+    drdy_mode: 'DRDY_ONLY'
+    update_interval: 5s
+    accuracy_decimals: 3
+    filters:
+      - multiply: 1.515151515
